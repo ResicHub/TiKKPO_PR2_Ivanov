@@ -19,23 +19,24 @@ namespace LinkedList_Test
 
         public TA_LinkedList_TwoSided.LinkedList<int> ManualListCreation(int[] collection)
         {
-            list = new TA_LinkedList_TwoSided.LinkedList<int>();
-            foreach (int item in collection)
+            TA_LinkedList_TwoSided.LinkedList<int> list = new TA_LinkedList_TwoSided.LinkedList<int>();
+            for (int i = 0; i < collection.Length; i++)
             {
-                Node<int> node = new Node<int>(item);
+                Node<int> node = new Node<int>(collection[i]);
                 if (list.Length == 0)
                 {
                     node.Next = node;
                     node.Prev = node;
                     list.head = node;
-                    list.tail = node;
                 }
                 else
                 {
-                    node.Next = list.head;
+                    list.tail.Next = node;
                     node.Prev = list.tail;
-                    list.tail = node;
                 }
+                list.tail = node;
+                list.tail.Next = list.head;
+                list.head.Prev = list.tail;
                 list.Length++;
             }
 
@@ -193,7 +194,7 @@ namespace LinkedList_Test
             Assert.IsTrue(list.Extract(1) == null, "Ошибка в 'Extract()' при пустом списке");
 
             list = ManualListCreation(new int[3] { 6, 7, 8 });
-            Assert.IsTrue(list.Extract(1).Data == 6, "Ошибка в 'Extract()' при непустом списке");
+            Assert.IsTrue(list.Extract(1).Data == 7, "Ошибка в 'Extract()' при непустом списке");
         }
 
         [TestMethod]
@@ -220,6 +221,7 @@ namespace LinkedList_Test
             Assert.IsTrue(list.head == null, "Ошибка в 'RemoveMin()' при списке с одним элементом");
 
             list = ManualListCreation(new int[3] { 3, 1, 2 });
+            list.RemoveMin();
             Assert.IsTrue(list.head.Data == 3 && list.head.Next.Data == 2, "Ошибка в 'RemoveMin()' при списке с несколькими элементами");
         }
 
@@ -235,7 +237,8 @@ namespace LinkedList_Test
             Assert.IsTrue(list.head == null, "Ошибка в 'RemoveMax()' при списке с одним элементом");
 
             list = ManualListCreation(new int[3] { 3, 1, 2 });
-            Assert.IsTrue(list.head.Data == 1 && list.head.Next.Data == 2, "Ошибка в 'RemoveMin()' при списке с несколькими элементами");
+            list.RemoveMax();
+            Assert.IsTrue(list.head.Data == 1 && list.head.Next.Data == 2, "Ошибка в 'RemoveMax()' при списке с несколькими элементами");
         }
 
         [TestMethod]
@@ -261,14 +264,40 @@ namespace LinkedList_Test
         public void ToArray_Test()
         {
             list = ManualListCreation(new int[3] { 1, 2, 3 });
-            Assert.AreEqual(list.ToArray(), new int[3] { 1, 2, 3 }, "Ошибка в 'ToArray()'") ;
+            var listArr = list.ToArray();
+            int[] arr = new int[3] { 1, 2, 3 };
+            bool check = Equals(listArr.GetType(), arr.GetType());
+            if(check)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    if (!Equals(listArr[i], arr[i]))
+                    {
+                        check = false;
+                    }
+                }
+            }
+            Assert.IsTrue(check, "Ошибка в 'ToArray()'") ;
         }
 
         [TestMethod]
         public void ToList_Test()
         {
             list = ManualListCreation(new int[3] { 1, 2, 3 });
-            Assert.AreEqual(list.ToList(), new List<int> { 1, 2, 3 }, "Ошибка в 'ToList()'");
+            var listList = list.ToList();
+            List<int> arr = new List<int> { 1, 2, 3 };
+            bool check = Equals(listList.GetType(), arr.GetType());
+            if (check)
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    if (!Equals(listList[i], arr[i]))
+                    {
+                        check = false;
+                    }
+                }
+            }
+            Assert.IsTrue(check, "Ошибка в 'ToList()'");
         }
     }
 }

@@ -243,6 +243,11 @@ namespace TA_LinkedList_TwoSided
         // Метод, который извлекает и возвращает начальный узел двусвязного списка
         public Node<T> PopFront()
         {
+            if (IsEmpty())
+            {
+                return null;
+            }
+
             Node<T> nodeForReturn = head;
 
             if (Length == 1)
@@ -264,6 +269,11 @@ namespace TA_LinkedList_TwoSided
         // Метод, который извлекает и возвращает последний узел двусвязного списка
         public Node<T> PopBack()
         {
+            if (IsEmpty())
+            {
+                return null;
+            }
+
             Node<T> nodeForReturn = tail;
 
             if (Length == 1)
@@ -285,6 +295,10 @@ namespace TA_LinkedList_TwoSided
         // Метод, извлекающий узел с индексом 'index'
         public Node<T> Extract(int index)
         {
+            if (IsEmpty())
+            {
+                return null;
+            }
             if (index == 0)
             {
                 return PopFront();
@@ -316,10 +330,32 @@ namespace TA_LinkedList_TwoSided
         {
             if (!IsEmpty())
             {
-                Node<T> minNode = FindMin();
-                minNode.Prev.Next = minNode.Next;
-                minNode.Next.Prev = minNode.Prev;
-                Length--;
+                if (Length == 1)
+                {
+                    Clear();
+                }
+                else
+                {
+                    Node<T> minNode = FindMin();
+                    if (Equals(minNode, head))
+                    {
+                        head = head.Next;
+                        head.Prev = tail;
+                        tail.Next = head;
+                    }
+                    else if (Equals(minNode, tail))
+                    {
+                        tail = tail.Prev;
+                        tail.Next = head;
+                        head.Prev = tail;
+                    }
+                    else
+                    {
+                        minNode.Prev.Next = minNode.Next;
+                        minNode.Next.Prev = minNode.Prev;
+                    }
+                    Length--;
+                }
             }
         }
 
@@ -328,10 +364,32 @@ namespace TA_LinkedList_TwoSided
         {
             if (!IsEmpty())
             {
-                Node<T> maxNode = FindMax();
-                maxNode.Prev.Next = maxNode.Next;
-                maxNode.Next.Prev = maxNode.Prev;
-                Length--;
+                if (Length == 1)
+                {
+                    Clear();
+                }
+                else
+                {
+                    Node<T> maxNode = FindMax();
+                    if (Equals(maxNode, head))
+                    {
+                        head = head.Next;
+                        head.Prev = tail;
+                        tail.Next = head;
+                    }
+                    else if (Equals(maxNode, tail))
+                    {
+                        tail = tail.Prev;
+                        tail.Next = head;
+                        head.Prev = tail;
+                    }
+                    else
+                    {
+                        maxNode.Prev.Next = maxNode.Next;
+                        maxNode.Next.Prev = maxNode.Prev;
+                    }
+                    Length--;
+                }
             }
         }
 
